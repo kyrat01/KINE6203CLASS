@@ -2,7 +2,7 @@ function guessThatNumber()  % *** WARNING: CONTAINS INTENTIONAL BUGS! ***
 %---------------------------------------------------------------
 %       USAGE: guessThatNumber() - Assignment 5
 %
-%        NAME:
+%        NAME:Kyra Taylor
 %
 % DESCRIPTION: This program is supposed to allow the user to play
 %              the Number Guessing Game, however, it contains bugs.
@@ -42,7 +42,11 @@ fprintf('   3) Advanced (range is 1 to %d)\n', advancedHighest)
 
 level = input('Enter level (1-3): '); 
 
-while level ~= beginner || level ~= moderate || level ~= advanced       
+while level ~= beginner && level ~= moderate && level ~= advanced % this condition allows any one 
+    %of the levels to always be true because level cannot equal the three
+    %values. When testing, program ask for level input when valid inputs
+    %were entered. Corrected with replacing "or" with "and" so that loop
+    %can be exited once it has valid input.
 fprintf('Sorry, that is not a valid level selection.\n')
 level = input('Please re-enter a level of play (1-3): ');
 end
@@ -58,12 +62,17 @@ elseif level == moderate
 highest = moderateHighest;
 
 else
-highest = advancedhighest;          
+highest = advancedHighest; %The bug found here was a case sensitive related 
+% situation that was defined earlier in script .This bug was found by reviewing code before starting. 
+% It was corrected by changing it from "advancehighest" to "advanceHighest"         
 end
 
 % randomly select secret number between 1 and highest for level of play
 
-secretNumber = floor(rand() + 1 * highest);     
+secretNumber = randi([1, highest]); %This bug comes from adding 1 to the expression. The outpu
+%are numbers between 1 and the highest number + 1. found from testing.
+%Corrected by replacing expression with randi function to select random
+%numbers between 1 and highest. 
 
 % initialize number of guesses and User_guess
 
@@ -78,7 +87,9 @@ while userGuess ~= secretNumber
 
 fprintf('\nEnter a guess (1-%d): ', highest);
 userGuess = input('');
-while userGuess < 1 || userGuess >= highest
+while userGuess < 1 || userGuess > highest %bug found when entering the highest number that can be guessed, 
+% saying not valid guess. Corrected by changing >= to > so that the highest
+% number could be included
 
 fprintf('Sorry, that is not a valid guess.\nRe-enter a guess (1-%d): ', highest);
 
@@ -92,17 +103,30 @@ numOfTries = numOfTries + 1;
 
 % report whether the user's guess was high, low, or correct
 
-if userGuess > secretNumber
-fprintf('Sorry, %d is too low.\n', userGuess);
+if userGuess < secretNumber
+fprintf('Sorry, %d is too low.\n', userGuess); %bug found that if and elseif conditions were the same, with the
+%if statement being wrong, with greater than sign instead of less than.
+%Found by reviewing code. Corrected by changing greater than sign to less
+%than. 
 elseif userGuess > secretNumber 
 fprintf('Sorry, %d is too high.\n', userGuess);
-elseif numOfTries == 1
-fprintf('\nLucky You!  You got it on your first try!\n\n');
 else
+    if numOfTries == 1
+fprintf('\nLucky You!  You got it on your first try!\n\n'); %Bug found that if secret number is guess
+%loop exits without displaying output. Found by testing secret number
+%through guessing on first try and had no display. Corrected by making if
+%statement for numOfTries, and "END" to exit loop and display output.
+    else
 fprintf('\nCongratulations!  You got %d in %d tries.\n\n', ...
-secretNumber);
-
-
+secretNumber, numOfTries); %The bug found is the second placeholder, %d, does not have a variable
+%This was found by reveiwing code. It was corrected by adding "numOfTries"
+%for the second placeholder. 
+    end 
+end %bug found with error message about "END" missing from the while loop
+end
+%bug found when testing. After guessing number, display game over but still
+%ask to enter another guess. Corrected by ending while loop to to display
+%game over after the correct number ha been guessed
 fprintf('Game Over. Thanks for playing the Guess That Number game.\n\n');
 
 end  % of guessing while loop
